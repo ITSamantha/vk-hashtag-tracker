@@ -17,7 +17,7 @@ def main():
 
 
 
-    #wall = tools.get_all('account.getProfileInfo', 1, {'owner_id': 158559805})
+    #wall = tools.get_all('account.getProfileInfo', 1, {'owner_id': 158559805})1
 
     # upload = vk_api.VkUpload(session)
     #
