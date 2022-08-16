@@ -21,7 +21,9 @@ def remove_numbers(text: str):
 
 
 def remove_punctuation(text: str):
-    remover = str.maketrans('', '', string.punctuation + '—')
+    punc = string.punctuation
+    punc = punc.replace("#","-")
+    remover = str.maketrans('', '', punc)
     return text.translate(remover)
 
 

@@ -1,6 +1,7 @@
 import vk_api
 import vk as VK
 import os
+import TextProcessing.Processing as p
 
 VAR_NAME = "VK_Hashtag_Tracker"
 
@@ -8,11 +9,14 @@ def main():
     session = vk_api.vk_api.VkApi(token=os.environ[VAR_NAME])
     vk = session.get_api()
     tools = vk_api.VkTools(session)
-    a = session.method('newsfeed.search',{'q':'#fcb','count':100})
-    c=0
-    for i in a['items']:
-        print(c, i['text'], end='\n\n')
-        c+=1
+    var = input('Введите текст:')
+    a = session.method('newsfeed.search',{'q':f"\"{var}\"",'count':"3"})
+    words = [p.using_mystem(a['items'][i]['text']) for i in range(3)]
+    for i in words:
+        print(i)
+    norm_words = [words[i][:3] for i in range(len(words))]
+    print(norm_words)
+
 
 
 
