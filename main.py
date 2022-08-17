@@ -5,17 +5,32 @@ import TextProcessing.Processing as p
 
 VAR_NAME = "VK_Hashtag_Tracker"
 
+#Тестовая функция сбора с json
+def test_function(session,TEXT = 'супер папа'):
+    posts = session.method('newsfeed.search', {'q': f"\"{TEXT}\"", 'count': "3"})
+    words = [p.using_mystem(posts['items'][i]['text']) for i in range(3)]
+    norm_words = [[word[0] for word in words[i][:10] if word[0].isalpha() and len(word)<=3] for i in range(len(words)) ]
+    print(norm_words)
+
 def main():
     session = vk_api.vk_api.VkApi(token=os.environ[VAR_NAME])
     vk = session.get_api()
     tools = vk_api.VkTools(session)
+    test_function(session)
+
+
+#Тестовая функция
+def function(session):
     var = input('Введите текст:')
-    a = session.method('newsfeed.search',{'q':f"\"{var}\"",'count':"3"})
+    a = session.method('newsfeed.search', {'q': f"\"{var}\"", 'count': "3"})
     words = [p.using_mystem(a['items'][i]['text']) for i in range(3)]
     for i in words:
         print(i)
     norm_words = [words[i][:3] for i in range(len(words))]
     print(norm_words)
+
+
+
 
 
 

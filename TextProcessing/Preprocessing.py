@@ -9,7 +9,7 @@ def preprocessing(text: str):
     text = remove_numbers(text)
     text = remove_punctuation(text)
     text = remove_whitespace(text)
-    return  text
+    return text
 
 
 def text_lowercase(text: str):
