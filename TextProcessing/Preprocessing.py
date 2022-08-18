@@ -2,37 +2,26 @@ import re
 import string
 
 from nltk.corpus import stopwords
+from nltk.tokenize import word_tokenize
 
 
-def preprocessing(text: str):
-    text = text_lowercase(text)
-    text = remove_numbers(text)
-    text = remove_punctuation(text)
-    text = remove_whitespace(text)
+def preprocessing_text(text: str, lang: str = 'russian'):
+    text = text.lower()
+
+    text = re.sub(r'[^a-zA-ZёЁа-яА-Я0-9 ]+', ' ', text)
+
+    mystopwords = set(stopwords.words(lang))
+    list_text = [word for word in text.split() if word not in mystopwords]
+    text = ' '.join([word for word in list_text])
+    text = re.sub(r'(?:^\s+)|(?:(?<=\s)\s+)|(?:\s+$)', '', text)
+
+
+
     return text
 
 
-def text_lowercase(text: str):
-    return text.lower()
-
-
-def remove_numbers(text: str):
-    return re.sub(r'\d+', '', text)
-
-
-def remove_punctuation(text: str):
-    punc = string.punctuation
-    punc = punc.replace("#","-")
-    remover = str.maketrans('', '', punc)
-    return text.translate(remover)
-
-
-def remove_whitespace(text: str):
-    return re.sub(r'(?:^\s+)|(?:(?<=\s)\s+)|(?:\s+$)', '', text)
-
-
-def remove_stopwords(text_tokens: list, lang: str):
-    mystopwords = set(stopwords.words(lang))
-    return [word for word in text_tokens if word not in mystopwords]
+def get_tokens(text: str, lang: str):
+    text = preprocessing_text(text, lang)
+    return word_tokenize(text, language=lang)
 
 
