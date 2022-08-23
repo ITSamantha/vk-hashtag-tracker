@@ -11,6 +11,7 @@ def preprocessing_text(text: str, lang: str = 'russian'):
     text = re.sub(r'[^a-zA-ZёЁа-яА-Я0-9 ]+', ' ', text)
 
     mystopwords = set(stopwords.words(lang))
+
     list_text = [word for word in text.split() if word not in mystopwords]
     text = ' '.join([word for word in list_text])
     text = re.sub(r'(?:^\s+)|(?:(?<=\s)\s+)|(?:\s+$)', '', text)
