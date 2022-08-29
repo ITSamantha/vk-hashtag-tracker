@@ -1,3 +1,5 @@
+import re
+
 from nltk import WordNetLemmatizer
 from pymorphy2 import MorphAnalyzer
 from pymystem3 import mystem
@@ -37,7 +39,9 @@ def using_mystem(text: str, ):
 
     mmm = mystem.Mystem()
     text = mmm.lemmatize(text)
-    print("Что-то посчиталось")
+    text = ' '.join(text)
+    text = re.sub(r'(?:^\s+)|(?:(?<=\s)\s+)|(?:\s+$)', '', text)
+    print("done")
     return text
 
 
