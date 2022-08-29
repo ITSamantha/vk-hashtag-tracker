@@ -8,7 +8,7 @@ from nltk.tokenize import word_tokenize
 def preprocessing_text(text: str, lang: str = 'russian'):
     text = text.lower()
 
-    text = re.sub(r'[^a-zA-ZёЁа-яА-Я0-9 ]+', ' ', text)
+    text = re.sub(r'[^a-zA-ZёЁа-яА-Я0-9 ]{}', ' ', text)
 
     mystopwords = set(stopwords.words(lang))
 

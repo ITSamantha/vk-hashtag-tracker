@@ -1,8 +1,6 @@
 from collections import Counter
 from typing import Dict
-
-
-from Preprocessing import preprocessing_text, get_tokens
+from TextProcessing.Preprocessing import preprocessing_text, get_tokens
 import  re
 
 

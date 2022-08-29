@@ -37,6 +37,7 @@ def using_mystem(text: str, ):
 
     mmm = mystem.Mystem()
     text = mmm.lemmatize(text)
+    print("Что-то посчиталось")
     return text
 
 
