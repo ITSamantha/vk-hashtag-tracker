@@ -41,7 +41,6 @@ def using_mystem(text: str, ):
     text = mmm.lemmatize(text)
     text = ' '.join(text)
     text = re.sub(r'(?:^\s+)|(?:(?<=\s)\s+)|(?:\s+$)', '', text)
-    print("done")
     return text
 
 

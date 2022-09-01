@@ -13,51 +13,39 @@ CATEGORIES_FILE_NAME = "categories.txt"
 
 
 # Возвращает DataFrame
-def create_dataframe_from_categories(session, posts_count="5", posts_for_hashtag_count="2"):
+def create_dataframe_from_categories(session,category,posts_count="1", posts_for_hashtag_count="1"):
     """
     Функция создает DataFrame для списка категорий из файла.
     Колонки DataFrame: ['category','hashtag','list_of_words']
     """
-    with open(CATEGORIES_FILE_NAME, "r", encoding='utf-8') as file:
-        categories = [cat.replace('\n', '') for cat in file.read().split(',')]
-    print("Categories read: ", *categories)
-    # df = pd.DataFrame()
     main_list = list()
-    for category in categories:
-        print(category + "\n")
-        posts = find_posts(session, text=f"#{category}", count=posts_count)
-        hashtags = list()
-        for post in posts['items']:
-            temp = [word.lower() for word in post['text'].split() if
+    posts = find_posts(session, text=f"#{category}", count=posts_count)
+    hashtags = list()
+    for post in posts['items']:
+        temp = [word.lower() for word in post['text'].split() if
                     re.fullmatch(r'\#[a-zA-ZёЁА-Яа-я\_\-0-9]+', word.lower())]
-            hashtags.extend(temp)
-        hashtags = set(hashtags)
-        print(hashtags, len(hashtags))
-        for hashtag in hashtags:
-            temp_posts = find_posts(session, text=f"{hashtag}", count=posts_for_hashtag_count)#TODO:исправить повторение текстов для разных хэштегов
-            text_posts = set([post['text'] for post in temp_posts['items']])
-            # temp_lst = [[word for word in Lemmatization.using_mystem(Preprocessing.preprocessing_text(text, 'russian'))
-            #              if re.fullmatch(r'[a-zA-ZёЁА-Яа-я\_\-0-9]+', word)]
-            #             for text in text_posts]
-            temp_lst = [Lemmatization.using_mystem(Preprocessing.preprocessing_text(text, 'russian'))
-                        for text in text_posts]
+        hashtags.extend(temp)
+    hashtags = set(hashtags)
+    print("Количество хэштегов:",len(hashtags),"\nХэштеги:", ','.join(hashtags))
+    i=1
+    for hashtag in hashtags:
+        temp_posts = find_posts(session, text=f"{hashtag}", count=posts_for_hashtag_count)#TODO:исправить повторение текстов для разных хэштегов
+        text_posts = set([post['text'] for post in temp_posts['items']])
+        temp_lst = [Preprocessing.preprocessing_text(text, 'russian') for text in text_posts if text != '']
+        temp_lst = [Lemmatization.using_mystem(text) for text in temp_lst if text !='']
+        if temp_lst:
             main_list.append([category, hashtag, temp_lst])
-            print(hashtag + " done")
-
-
-
-
-    # Сброс ограничений на количество выводимых рядов
-    pd.set_option('display.max_rows', None)
-    # Сброс ограничений на число столбцов
-    pd.set_option('display.max_columns', None)
-    # Сброс ограничений на количество символов в записи
-    pd.set_option('display.max_colwidth', None)
-
-    #print(TextProcessing.Vectorizing.using_TF_IDF([main_list[i][2][0] for i in range(len(main_list))]))
-
+        print(f"{i}/{len(hashtags)}.{hashtag} done")
+        i+=1
+    #
+    # # Сброс ограничений на количество выводимых рядов
+    # pd.set_option('display.max_rows', None)
+    # # Сброс ограничений на число столбцов
+    # pd.set_option('display.max_columns', None)
+    # # Сброс ограничений на количество символов в записи
+    # pd.set_option('display.max_colwidth', None)
+    #
     df = pd.DataFrame(main_list, columns=['category', 'hashtag', 'list_of_words'])
-    print(df)
     return df
 
 
@@ -76,8 +64,15 @@ def find_posts(session, text: str, count: str,offset = "0"):
 def main():
     session = vk_api.vk_api.VkApi(token=os.environ[VAR_NAME])
     vk = session.get_api()
-    df = create_dataframe_from_categories(session)
-    write_into_json_and_csv(df)
+    with open(CATEGORIES_FILE_NAME, "r", encoding='utf-8') as file:
+        categories = [cat.replace('\n', '') for cat in file.read().split(',')]
+    print("Categories read: ", *categories)
+    for index, category in enumerate(categories):
+        if index<=19:
+            print(f"{index+1}/{len(categories)}.Категория: {category.capitalize()}")
+            df = create_dataframe_from_categories(session,category)
+            if df.shape[0]!=0:
+                write_into_json_and_csv(df, f'category_{index}')
 
 
 #Тестовая функция

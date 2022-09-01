@@ -10,13 +10,13 @@ def preprocessing_text(text: str, lang: str = 'russian'):
 
     #TODO: Сделать удаление хештега!!!
     text = re.sub(r'\#[a-zA-ZёЁА-Яа-я\_\-0-9]+','',text)
+    text = re.sub(r'\b(?:https?\:.*)|(?:www\..*)\b', '', text)
     text = re.sub(r'[^a-zA-ZёЁа-яА-Я ]+', ' ', text)
 
     mystopwords = set(stopwords.words(lang))
 
     list_text = [word for word in text.split() if word not in mystopwords]
     text = ' '.join([word for word in list_text])
-    text = re.sub(r'\b(?:https?\:.*)|(?:www\..*)\b', '', text)
 
     text = re.sub(r'\b[a-zA-Zа-юА-ЮёЁ]{1}\b', '', text)
     text = re.sub(r'(?:^\s+)|(?:(?<=\s)\s+)|(?:\s+$)', '', text)
