@@ -12,18 +12,18 @@ from sklearn.preprocessing import MinMaxScaler
 
 #TODO: Сделать класс с определенной векторизацией и классификацией, храня модель (возможно и хештег)
 
-def using_TF_IDF(texts1: List[AnyStr], texts2, min_df =  1):
+def using_TF_IDF(texts1: List[AnyStr], texts2=None, min_df =  1):
     #TODO: Проверить  min_df!!!
     pd.set_option('display.max_columns', None)  # or 1000
     pd.set_option('display.max_rows', None)  # or 1000
     pd.set_option('display.max_colwidth', -1)  # or 199
     vectorizer = TfidfVectorizer(min_df = min_df)
     newText = vectorizer.fit_transform(texts1)
-    text = vectorizer.transform(texts2)
+    #text = vectorizer.transform(texts2)
 
     matrix1 = pd.DataFrame(newText.toarray(), columns=vectorizer.get_feature_names_out())
-    matrix2 = pd.DataFrame(text.toarray(), columns=vectorizer.get_feature_names_out())
-    return matrix1 , matrix2
+    #matrix2 = pd.DataFrame(text.toarray(), columns=vectorizer.get_feature_names_out())
+    return matrix1 #, matrix2
 
 def knn_tf_idf(x_train, y_train,x_test=None, y_test=None):
     model = Pipeline([('tf-idf', TfidfVectorizer()),

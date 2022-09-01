@@ -2,6 +2,8 @@ import os
 import pandas as pd
 import re
 import vk_api
+
+import TextProcessing
 import TextProcessing.Lemmatization as p
 from TextProcessing import Lemmatization, Preprocessing
 
@@ -44,12 +46,17 @@ def create_dataframe_from_categories(session, posts_count="1", posts_for_hashtag
             main_list.append([category, hashtag, temp_lst])
             print(hashtag + " done")
 
+
+
+
     # Сброс ограничений на количество выводимых рядов
     pd.set_option('display.max_rows', None)
     # Сброс ограничений на число столбцов
     pd.set_option('display.max_columns', None)
     # Сброс ограничений на количество символов в записи
     pd.set_option('display.max_colwidth', None)
+
+    #print(TextProcessing.Vectorizing.using_TF_IDF([main_list[i][2][0] for i in range(len(main_list))]))
 
     df = pd.DataFrame(main_list, columns=['category', 'hashtag', 'list_of_words'])
     print(df)
@@ -58,8 +65,7 @@ def create_dataframe_from_categories(session, posts_count="1", posts_for_hashtag
 
 def write_into_json_and_csv(data_frame: pd.DataFrame, file_name='data'):
     try:
-        data_frame.to_csv(f"{file_name}.csv", index=False)
-        data_frame.to_json(f"{file_name}.csv", index=False)
+        data_frame.to_csv(f"{file_name}.csv",index = False)
     except Exception as e:
         print('Что-то пошло не так с записью файла. Исключение:',e)
         return False
@@ -72,7 +78,8 @@ def find_posts(session, text: str, count: str,offset = "0"):
 def main():
     session = vk_api.vk_api.VkApi(token=os.environ[VAR_NAME])
     vk = session.get_api()
-    create_dataframe_from_categories(session)
+    df = create_dataframe_from_categories(session)
+    write_into_json_and_csv(df)
 
 
 #Тестовая функция
