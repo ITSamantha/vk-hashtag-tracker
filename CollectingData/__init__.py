@@ -13,7 +13,7 @@ CATEGORIES_FILE_NAME = "categories.txt"
 
 
 # Возвращает DataFrame
-def create_dataframe_from_categories(session, posts_count="1", posts_for_hashtag_count="2"):
+def create_dataframe_from_categories(session, posts_count="5", posts_for_hashtag_count="2"):
     """
     Функция создает DataFrame для списка категорий из файла.
     Колонки DataFrame: ['category','hashtag','list_of_words']
@@ -24,8 +24,6 @@ def create_dataframe_from_categories(session, posts_count="1", posts_for_hashtag
     # df = pd.DataFrame()
     main_list = list()
     for category in categories:
-        if category=='искусство':
-            break
         print(category + "\n")
         posts = find_posts(session, text=f"#{category}", count=posts_count)
         hashtags = list()
