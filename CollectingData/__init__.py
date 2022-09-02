@@ -3,6 +3,8 @@ import pandas as pd
 import re
 import vk_api
 
+import threading
+
 import TextProcessing
 import TextProcessing.Lemmatization as p
 from TextProcessing import Lemmatization, Preprocessing
@@ -13,7 +15,7 @@ CATEGORIES_FILE_NAME = "categories.txt"
 
 
 # Возвращает DataFrame
-def create_dataframe_from_categories(session,category,posts_count="1", posts_for_hashtag_count="1"):
+def create_dataframe_from_categories(session,category,posts_count="75", posts_for_hashtag_count="100"):
     """
     Функция создает DataFrame для списка категорий из файла.
     Колонки DataFrame: ['category','hashtag','list_of_words']
@@ -61,15 +63,15 @@ def find_posts(session, text: str, count: str,offset = "0"):
     return session.method('newsfeed.search', {'q': f"\"{text}\"", 'count': count,"offset":offset})
 
 
-def main():
+def main(nameThread: str, index_target: int):
     session = vk_api.vk_api.VkApi(token=os.environ[VAR_NAME])
     vk = session.get_api()
     with open(CATEGORIES_FILE_NAME, "r", encoding='utf-8') as file:
         categories = [cat.replace('\n', '') for cat in file.read().split(',')]
     print("Categories read: ", *categories)
     for index, category in enumerate(categories):
-        if index<=19:
-            print(f"{index+1}/{len(categories)}.Категория: {category.capitalize()}")
+        if index == index_target:
+            print(f"{nameThread} : {index+1}/{len(categories)}.Категория: {category.capitalize()}")
             df = create_dataframe_from_categories(session,category)
             if df.shape[0]!=0:
                 write_into_json_and_csv(df, f'category_{index}')
@@ -84,7 +86,12 @@ def main():
 #         print(i)
 #     norm_words = [words[i][:3] for i in range(len(words))]
 #     print(norm_words)
-
-
+#TODO: Многопоток сделан на скорую руку
 if __name__ == '__main__':
-    main()
+    targets = [0,2,3,4]
+    for target in targets:
+        thread_name = f'Поток {target}'
+        t = threading.Thread(target = main, args=(thread_name, target))
+        t.start()
+
+
