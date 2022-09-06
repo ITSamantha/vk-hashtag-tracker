@@ -88,7 +88,8 @@ def main(nameThread: str, index_target: int):
 #     print(norm_words)
 #TODO: Многопоток сделан на скорую руку
 if __name__ == '__main__':
-    targets = [5,6,7]
+
+    targets = [15,16,18]
     for target in targets:
         thread_name = f'Поток {target}'
         t = threading.Thread(target = main, args=(thread_name, target))
