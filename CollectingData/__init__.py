@@ -89,7 +89,7 @@ def main(nameThread: str, index_target: int):
 #TODO: Многопоток сделан на скорую руку
 if __name__ == '__main__':
 
-    targets = [15,16,18]
+    targets = [19,20,21]
     for target in targets:
         thread_name = f'Поток {target}'
         t = threading.Thread(target = main, args=(thread_name, target))
