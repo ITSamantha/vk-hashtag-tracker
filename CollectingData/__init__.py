@@ -86,7 +86,7 @@ def main(nameThread: str, index_target: int):
 #         print(i)
 #     norm_words = [words[i][:3] for i in range(len(words))]
 #     print(norm_words)
-#TODO: Многопоток сделан на скорую руку
+#TODO: Многопоток сделан на скорую руку вававававававав
 if __name__ == '__main__':
 
     targets = [19,20,21]
